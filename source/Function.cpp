@@ -1,25 +1,4 @@
-#include <iomanip>
-#include <iostream>
-
-const int WIDTH = 20;
-
-struct FullName {
-    std::string firstName;
-    std::string lastName;
-    std::string middleName;
-};
-
-struct Employee {
-    FullName fullName;
-    size_t payrollNumber;
-    size_t numberOfWorkedHours;
-    size_t hourlyRate;
-};
-
-struct List {
-    Employee employee;
-    List *next;
-};
+#include <Function.hpp>
 
 bool isEmpty(List *head) {
     return head == nullptr;
@@ -45,18 +24,20 @@ void insert(List **head, Employee employee) {
 
 }
 void printEmployee(List *current) {
-    std::cout << current->employee.fullName.firstName << std::setw(WIDTH)
-              << current->employee.fullName.lastName << std::setw(WIDTH)
-              << current->employee.fullName.middleName << std::setw(WIDTH)
-              << current->employee.payrollNumber << std::setw(WIDTH)
-              << current->employee.numberOfWorkedHours << std::setw(WIDTH)
-              << current->employee.hourlyRate << std::setw(WIDTH) << '\n';
+    std::cout << std::left << std::setw(WIDTH) << current->employee.fullName.firstName
+              << std::left << std::setw(WIDTH) << current->employee.fullName.lastName 
+              << std::left << std::setw(WIDTH) << current->employee.fullName.middleName 
+              << std::left << std::setw(WIDTH) << current->employee.payrollNumber 
+              << std::left << std::setw(WIDTH) << current->employee.numberOfWorkedHours 
+              << std::left << std::setw(WIDTH) << current->employee.hourlyRate << '\n';
 }
 void printList(List *head) {
     List *current = head;
     if(isEmpty(current)) {
         std::cout << "List is empty\n";
+        return;
     }
+    printHeadline();
     while(!isEmpty(current)) {
         printEmployee(current);
         current = current->next;
@@ -115,11 +96,13 @@ void deleteList(List **head) {
 }
 
 void printSalary(List *current, const double &salary) {
-    std::cout << current->employee.fullName.firstName << std::setw(WIDTH)
-              << current->employee.fullName.lastName << std::setw(WIDTH)
-              << current->employee.fullName.middleName << std::setw(WIDTH)
-              << current->employee.payrollNumber << std::setw(WIDTH)
-              << salary << '\n';
+    std::cout << std::setw(WIDTH) << std::left << current->employee.fullName.firstName
+              << std::setw(WIDTH) << std::left << current->employee.fullName.lastName 
+              << std::setw(WIDTH) << std::left << current->employee.fullName.middleName
+              << std::setw(WIDTH) << std::left << current->employee.payrollNumber 
+              << std::setw(WIDTH) << std::left << current->employee.numberOfWorkedHours 
+              << std::setw(WIDTH) << std::left << current->employee.hourlyRate 
+              << std::setw(WIDTH) << std::left << salary << '\n';
 
 }
 void calculateSalary(List *head) {
@@ -142,15 +125,7 @@ void calculateSalary(List *head) {
     }
 }
 
-enum class Option {
-    ADD_EMPLOYEE = 1,
-    DELETE_EMPLOYEE,
-    FIND_EMPLOYEE,
-    PRINT_LIST,
-    CALCULATE_SALARY,
-    DELETE_LIST,
-    EXIT
-};
+
 void showMenu() {
     std::cout << "Choose an option:\n"  
          << "1. Add employee\n" 
@@ -192,75 +167,13 @@ Option getOption() {
     std::cin >> option;
     return static_cast<Option>(option);
 }
-int main() {
-    List *head = nullptr;
-    Option option;
-    do {
-        showMenu();
-        option = getOption();
-        switch (option) {
-            case Option::ADD_EMPLOYEE: {
-                Employee employee = getEmployee();
-                insert(&head, employee);
-                break;
-            }
-            case Option::DELETE_EMPLOYEE: {
-                if(isEmpty(head)) {
-                    std::cout << "List is empty\n";
-                } else {
-                    size_t payrollNumberToDelete = getPayrollNumber("to detele");
-                    deleteEmployeeByPayrollNumber(&head, payrollNumberToDelete);
-                }
-                break;
-            }
-            case Option::FIND_EMPLOYEE: {
-                if(isEmpty(head)) {
-                    std::cout << "List is empty\n";
-                } else {
-                    size_t payrollNumberTofind = getPayrollNumber("to find");
-                    List *employeeTofind = findEmployee(head,payrollNumberTofind);
-                    if(employeeTofind != nullptr) {
-                        printEmployee(employeeTofind);
-                    }
-                }
-                break;
-            }
-            case Option::PRINT_LIST: {
-                if(isEmpty(head)) {
-                    std::cout << "List is empty\n";
-                } else {
-                    printList(head);  
-                }  
-                break;
-            }
-            case Option::CALCULATE_SALARY: {
-                if(isEmpty(head)) {
-                    std::cout << "List is empty\n";
-                } else {
-                    calculateSalary(head);
-                }
-                break;
-            }
-            case Option::DELETE_LIST: {
-                if(isEmpty(head)) {
-                    std::cout << "List is empty\n";
-                } else {
-                    deleteList(&head);
-                }
-                break;
-            }
-            case Option::EXIT: {
-                std::cout << "Exiting...\n";
-                break;
-            }
-            default: {
-                std::cout << "Invalid option. Please choose other option.\n";
-                break;
-            }
-        }
-    } while (option != Option::EXIT);
 
-    deleteList(&head);
-
-    return 0;
+void printHeadline() {
+    std::cout  << std::setw(WIDTH) << std::left << "First Name"
+               << std::setw(WIDTH) << std::left << "Last Name"
+               << std::setw(WIDTH) << std::left << "Middle Name"
+               << std::setw(WIDTH) << std::left << "Payroll Number"
+               << std::setw(WIDTH) << std::left << "Worked Hours"
+               << std::setw(WIDTH) << std::left << "Hourly Rate" 
+               << std::setw(WIDTH) << std::left << "Salary"<< '\n';
 }
