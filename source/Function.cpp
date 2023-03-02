@@ -45,13 +45,17 @@ void printList(List *head) {
 }
 
 void deleteEmployeeByPayrollNumber(List **head, int payrollNumber) {
+    if (*head == nullptr) {
+        std::cerr << "The list is empty\n";
+        return;
+    }
+
     List *current = *head;
-    List *previous;
+    List *previous = nullptr;
 
-
-    while (!isEmpty(current) && current->employee.payrollNumber != payrollNumber) {
+    while (current != nullptr && current->employee.payrollNumber != payrollNumber) {
         previous = current;
-        current = current->next; // which has a needed payrollNumber
+        current = current->next;
     }
 
     if (current == nullptr) {
@@ -59,15 +63,16 @@ void deleteEmployeeByPayrollNumber(List **head, int payrollNumber) {
         return;
     }
 
-    if(!isEmpty(current) && current->employee.payrollNumber == payrollNumber) { // if it is a head node(first)
+    if (previous == nullptr) { // if it is a head node (first)
         *head = current->next; // to skip deleted node
         delete current;
         return;
     } 
+
     previous->next = current->next; // we like jump over a deleted node
     delete current;
-
 }
+
 
 
 List *findEmployee(List *head, int payrollNumber) {
